@@ -11,6 +11,7 @@ using Android.Runtime;
 using Android.Util;
 using Android.Views;
 using Android.Widget;
+using Java.Lang;
 using Java.Lang.Reflect;
 
 namespace UsbTethering.Controllers
@@ -52,15 +53,23 @@ namespace UsbTethering.Controllers
         //}
         public void SetWifiTetheringEnabled(bool enable)
         {
+            Java.Lang.Boolean boolean = (Java.Lang.Boolean)enable;
+            
             WifiManager wifiManager = (WifiManager)_context.GetSystemService(Context.WifiService);
-            WifiConfiguration wifiConfig = (WifiConfiguration) _context.GetSystemService(Context.WifiService);
+            WifiConfiguration wifiConfig =new WifiConfiguration();
+            if (enable)
+            {
+                wifiManager.SetWifiEnabled(false);
+            }
 
             Method[] methods = wifiManager.Class.GetDeclaredMethods();
             foreach (Method method in methods)
             {
                 if (method.Name.Equals("setWifiApEnabled"))
                 {
-                    method.Invoke(wifiManager,wifiConfig, enable);
+                    Class[] parameterTypes = method.GetParameterTypes();
+                    ITypeVariable[] typeParameters = method.GetTypeParameters();
+                    method.Invoke(wifiManager,wifiConfig, boolean);
                     break;
                 }
             }

@@ -33,7 +33,7 @@ namespace UsbTethering
             Tethering tethering=new Tethering(this);
             try
             {
-                tethering.SetWifiTetheringEnabled(_wifiStateOn);
+                tethering.SetWifiTetheringEnabled(true);
             }
             catch (Exception ex)
             {
